@@ -16,7 +16,7 @@ food = {x: 6, y: 7};
 function main(ctime){
     window.requestAnimationFrame(main);
     if((ctime - lastPaintTime)/1000 < 1/speed){
-        return
+        return;
     }
     lastPaintTime = ctime;
     gameEngine();
@@ -50,7 +50,12 @@ function gameEngine(){
     //If you have eaten the food, increment the score and regenrate the food
     if(snakeArr[0].y ===food.y && snakeArr[0].x ===food.x){
         foodSound.play();
-        score+=1;
+        score +=1;
+        if(score>hiscoreval){
+            hiscoreval = score;
+            localStorage.setItem("hiscore", JSON.stringify(hiscoreval));
+            hiscoreBox.innerHTML = "High Score: " + hiscoreval;
+        }
         scoreBox.innerHTML = "Score: " + score;
         snakeArr.unshift({x: snakeArr[0].x + inputDir.x, y: snakeArr[0].y + inputDir.y});
         let a = 2;
@@ -88,16 +93,17 @@ function gameEngine(){
         foodElement.classList.add('food')
         board.appendChild(foodElement);
 }
+
 //Main Logic
-// let hiscore = localStorage.getItem("hiscore");
-// if(hiscore === null){
-//     hiscoreval = 0;
-//     localStorage.setItem("hiscore", JSON.stringify(hiscoreval));
-// }
-// else{
-//     hiscoreval = JSON.parse(hiscore);
-//     hiScoreBox.innerHTML = "High Score: " + hiscore;
-// }
+let hiscore = localStorage.getItem("hiscore");
+if(hiscore === null){
+    hiscoreval = 0;
+    localStorage.setItem("hiscore", JSON.stringify(hiscoreval));
+}
+else{
+    hiscoreval = JSON.parse(hiscore);
+    hiscoreBox.innerHTML = "High Score: " + hiscore;
+}
 window.requestAnimationFrame(main);
 window.addEventListener('keydown', e =>{
     inputDir = {x: 0, y: 1};
